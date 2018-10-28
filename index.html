@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hangman Game</title>
+
+    <!-- Added link to the jQuery Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Added a link to Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+</head>
+<body>
+
+<!-- Jumbotron for Title -->
+<div class="jumbotron">
+    <h1 class="text-center">Hangman Game</h1>
+    <h3 class="text-center">Hey man... Don't leave me hangin'</h3>
+    <button id="start" class="btn btn-danger start"><h1>Game Start</h1></button>
+</div>
+
+<div class="container">
+
+    <div class="row">
+
+        <!-- Calculator Card -->
+        <div class="col-lg-5.5">
+            <div class="card">
+                <h3 class="card-header">Letters</h3>
+
+                <div class="card-body">
+                    <button id="a" class="btn btn-primary letter"><h1>a</h1></button>
+                    <button id="b" class="btn btn-primary letter"><h1>b</h1></button>
+                    <button id="c" class="btn btn-primary letter"><h1>c</h1></button>
+                    <button id="d" class="btn btn-primary letter"><h1>d</h1></button>
+                    <button id="e" class="btn btn-primary letter"><h1>e</h1></button>
+                    <button id="f" class="btn btn-primary letter"><h1>f</h1></button>
+                    <button id="g" class="btn btn-primary letter"><h1>g</h1></button>
+                    <button id="h" class="btn btn-primary letter"><h1>h</h1></button>
+                    <br><br>
+                    <button id="i" class="btn btn-primary letter"><h1>i</h1></button>
+                    <button id="j" class="btn btn-primary letter"><h1>j</h1></button>
+                    <button id="k" class="btn btn-primary letter"><h1>k</h1></button>
+                    <button id="l" class="btn btn-primary letter"><h1>l</h1></button>
+                    <button id="m" class="btn btn-primary letter"><h1>m</h1></button>
+                    <button id="n" class="btn btn-primary letter"><h1>n</h1></button>
+                    <button id="o" class="btn btn-primary letter"><h1>o</h1></button>
+                    <button id="p" class="btn btn-primary letter"><h1>p</h1></button>
+                    <button id="q" class="btn btn-primary letter"><h1>q</h1></button>
+                    <br><br>
+                    <button id="r" class="btn btn-primary letter"><h1>r</h1></button>
+                    <button id="s" class="btn btn-primary letter"><h1>s</h1></button>
+                    <button id="t" class="btn btn-primary letter"><h1>t</h1></button>
+                    <button id="u" class="btn btn-primary letter"><h1>u</h1></button>
+                    <button id="v" class="btn btn-primary letter"><h1>v</h1></button>
+                    <button id="w" class="btn btn-primary letter"><h1>w</h1></button>
+                    <button id="x" class="btn btn-primary letter"><h1>x</h1></button>
+                    <button id="y" class="btn btn-primary letter"><h1>y</h1></button>
+                    <button id="z" class="btn btn-primary letter"><h1>z</h1></button>
+                    <br><br>
+                    <h5>Wins: </h5>
+                    <h5 id="wins"></h5>
+                    <hr>
+                    <h5>Lost: </h5>
+                    <h5 id="lost"></h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Card -->
+        <div class="col-lg-6">
+            <div class="card">
+                <h3 class="card-header">Word to Guess</h3>
+                <div class="card-body">
+                    <h1 id="word-field"></h1>
+                    <hr>
+                    <h5>Right Guesses: </h5>
+                    <h5 id="right-guess"></h5>
+                    <hr>
+                    <h5>Wrong Guesses: </h5>
+                    <h5 id="wrong-guess"></h5>
+                    <hr>
+                    <h5>Guesses Left: </h5>
+                    <h5 id="left-guess"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        //Initialize variables
+        const cats = ["abyssinian", "manx",
+            "norwegian", "ocicat", "oriental", "persian",
+            "ragamuffin", "ragdoll", "russian",
+            "scottish", "selkirk", "siamese",
+            "siberian", "singapura", "somali", "sphynx",
+            "tonkinese", "turkish", "turkish"];
+        var win = 0;
+        var lose = 0;
+        var rguess = 0;
+        var wguess = 0;
+        var guesses = 10;
+        let randNum = Math.floor(Math.random() * cats.length);
+        let word = cats[randNum];
+        let underScore = [];
+
+        function New() {
+            randNum = Math.floor(Math.random() * cats.length);
+            word = cats[randNum];
+            underScore = [];
+            for (let i = 0; i < word.length; i++) {
+                underScore.push('_');
+            }
+            document.getElementById("word-field").textContent = underScore;
+            guesses=10;
+            document.getElementById("left-guess").textContent = guesses;
+            ResetButtons;
+        }
+
+        function Processing() {
+            if(guesses>0) {
+                if(word.indexOf(this.id) > -1) {
+                    this.setAttribute("class", "btn btn-success letter");
+                    underScore[word.indexOf(this.id)] = this.id;
+                    document.getElementById("word-field").textContent = underScore;
+                    rguess++;
+                } else {
+                    this.setAttribute("class", "btn btn-danger letter");
+                    wguess++;
+                    guesses--;
+                }
+                if(rguess===underScore.length){
+                    document.getElementById("word-field").textContent = "YOU WON!";
+                    win++;
+                    document.getElementById("wins").textContent = win;
+                    New;
+                }
+            } else {
+                document.getElementById("word-field").textContent = "YOU LOST!";
+                lose++;
+                document.getElementById("lost").textContent = lose;
+                New;
+            }
+            document.getElementById("right-guess").textContent = rguess;
+            document.getElementById("wrong-guess").textContent = wguess;
+            document.getElementById("left-guess").textContent = guesses;
+        }
+
+        //Listening command
+        document.getElementById("a").onclick = Processing;
+        document.getElementById("b").onclick = Processing;
+        document.getElementById("c").onclick = Processing;
+        document.getElementById("d").onclick = Processing;
+        document.getElementById("e").onclick = Processing;
+        document.getElementById("f").onclick = Processing;
+        document.getElementById("g").onclick = Processing;
+        document.getElementById("h").onclick = Processing;
+        document.getElementById("i").onclick = Processing;
+        document.getElementById("j").onclick = Processing;
+        document.getElementById("k").onclick = Processing;
+        document.getElementById("l").onclick = Processing;
+        document.getElementById("m").onclick = Processing;
+        document.getElementById("n").onclick = Processing;
+        document.getElementById("o").onclick = Processing;
+        document.getElementById("p").onclick = Processing;
+        document.getElementById("q").onclick = Processing;
+        document.getElementById("r").onclick = Processing;
+        document.getElementById("s").onclick = Processing;
+        document.getElementById("t").onclick = Processing;
+        document.getElementById("u").onclick = Processing;
+        document.getElementById("v").onclick = Processing;
+        document.getElementById("w").onclick = Processing;
+        document.getElementById("x").onclick = Processing;
+        document.getElementById("y").onclick = Processing;
+        document.getElementById("z").onclick = Processing;
+        document.getElementById("start").onclick = New;
+
+        //Reset Buttons function
+        function ResetButtons() {
+            document.getElementById("a").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("b").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("c").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("d").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("e").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("f").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("g").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("h").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("i").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("j").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("k").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("l").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("m").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("n").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("o").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("p").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("q").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("r").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("s").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("t").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("u").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("v").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("w").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("x").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("y").setAttribute("class", "btn btn-primary letter");
+            document.getElementById("z").setAttribute("class", "btn btn-primary letter");
+        }
+
+    });
+</script>
+
+</body>
+</html>
